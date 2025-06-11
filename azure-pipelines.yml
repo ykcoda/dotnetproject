@@ -4,10 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
 
 trigger:
-- main
+- master
 
 pool:
-  vmImage: 'windows-latest'
+  name: 'Onprem-UAT-Agent'
 
 variables:
   solution: '**/*.sln'
