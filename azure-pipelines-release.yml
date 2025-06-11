@@ -3,6 +3,7 @@ trigger:
 
 variables:
   IISWebsiteName: 'Default Web Site'
+  ConnectionStrings.DefaultConnection: 'Data Source=DevServer;Initial Catalog=LocalDatabase;User ID=UserName;Password=Password'
 
 resources:  
   pipelines:
@@ -56,6 +57,8 @@ stages:
                   WebSiteName: '${{ variables.IISWebsiteName }}'
                   Package: '$(Pipeline.Workspace)\unzipped'
                   TakeAppOfflineFlag: true
+                  XmlVariableSubstitution: true
+                  JSONFiles: '**\appsettings.json'
               
               - task: IISWebAppManagementOnMachineGroup@0
                 name: 'StartIIS'
