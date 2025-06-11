@@ -40,12 +40,21 @@ stages:
                   ActionIISWebsite: 'StopWebsite'
                   StartStopWebsiteName: '${{variables.IISWebsiteName}}'
 
+              - task: ExtractFiles@1
+                name: 'ExtractWebDeployPackage'
+                displayName: 'Extract Web Deploy Package'
+                inputs:
+                  archiveFilePatterns: '$(Pipeline.Workspace)\buildPipeline\drop\SampleWebApp.zip'  # or specify the exact zip file
+                  destinationFolder: '$(Pipeline.Workspace)\unzipped'
+                  cleanDestinationFolder: true
+                
+              
               - task: IISWebAppDeploymentOnMachineGroup@0
                 name: 'DeployIIS'
                 displayName: 'Deploy IIS website'
                 inputs:
-                  WebSiteName: '${{variables.IISWebsiteName}}'
-                  Package: '$(Pipeline.Workspace)\buildPipeline\drop'
+                  WebSiteName: '${{ variables.IISWebsiteName }}'
+                  Package: '$(Pipeline.Workspace)\unzipped'
                   TakeAppOfflineFlag: true
               
               - task: IISWebAppManagementOnMachineGroup@0
