@@ -7,7 +7,8 @@ trigger:
 - master
 
 pool:
-  name: 'Onprem-UAT-Agent'
+  vmImage: 'windows-latest' 
+  #name: 'Onprem-UAT-Agent'
 
 variables:
   solution: '**/*.sln'
