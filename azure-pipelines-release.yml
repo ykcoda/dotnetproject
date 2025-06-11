@@ -2,7 +2,7 @@ trigger:
 - none 
 
 variables:
-  IISWebsiteName: 'Default Web Site'
+  IISWebsiteName: 'demoapp'
   ConnectionStrings.DefaultConnection: 'Data Source=DevServer;Initial Catalog=LocalDatabase;User ID=UserName;Password=Password'
 
 resources:  
