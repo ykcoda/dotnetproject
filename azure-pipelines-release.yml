@@ -1,0 +1,37 @@
+- stage: DeployToUAT
+  displayName: 'Deploy to UAT IIS Server'
+  dependsOn: Build
+  condition: succeeded()
+  jobs:
+  - deployment: UATDeployment
+    displayName: 'Deploy to FBL_UAT_ENVIRONMENT'
+    environment: 'FBL_UAT_ENVIRONMENT'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - download: current
+            artifact: drop
+
+          - task: PowerShell@2
+            displayName: 'Deploy to IIS'
+            inputs:
+              targetType: 'inline'
+              script: |
+                $iisSiteName = "Default Web Site"  # Change this to your actual IIS site name
+                $publishPath = "$(Pipeline.Workspace)\drop"
+
+                Write-Host "Stopping IIS site: $iisSiteName"
+                Import-Module WebAdministration
+                Stop-WebSite -Name $iisSiteName
+
+                Write-Host "Clearing old site content..."
+                Remove-Item "C:\inetpub\wwwroot\*" -Recurse -Force
+
+                Write-Host "Copying new files to IIS site..."
+                Copy-Item "$publishPath\*" "C:\inetpub\wwwroot\" -Recurse -Force
+
+                Write-Host "Starting IIS site: $iisSiteName"
+                Start-WebSite -Name $iisSiteName
+
+                Write-Host "Deployment to IIS completed successfully."
